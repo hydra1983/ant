@@ -77,6 +77,7 @@ public class Get extends Task {
     private boolean skipExisting = false;
     private boolean httpUseCaches = true; // on by default
     private Mapper mapperElement = null;
+	private boolean quiet = false;
 
     /**
      * Does the work.
@@ -123,7 +124,7 @@ public class Get extends Task {
             }
 
         //set up logging
-        int logLevel = Project.MSG_INFO;
+        int logLevel = quiet ? Project.MSG_ERR : Project.MSG_INFO;
         DownloadProgress progress = null;
         if (verbose) {
             progress = new VerboseProgress(System.out);
@@ -411,6 +412,15 @@ public class Get extends Task {
     public void setHttpUseCaches(boolean httpUseCache) {
         this.httpUseCaches = httpUseCache;
     }
+	
+	/**
+     * If true, set default log level to Project.MSG_ERR.
+     *
+     * @param v if "true" then be quiet
+     */
+	public void setQuiet(boolean v){
+		this.quiet = v;
+	}
 
     /**
      * Define the mapper to map source to destination files.
