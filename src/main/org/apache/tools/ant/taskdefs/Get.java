@@ -124,7 +124,7 @@ public class Get extends Task {
             }
 
         //set up logging
-        int logLevel = quiet ? Project.MSG_ERR : Project.MSG_INFO;
+        int logLevel = Project.MSG_INFO;
         DownloadProgress progress = null;
         if (verbose) {
             progress = new VerboseProgress(System.out);
@@ -199,8 +199,9 @@ public class Get extends Task {
         if (progress == null) {
             progress = new NullProgress();
         }
-        log("Getting: " + source, logLevel);
-        log("To: " + dest.getAbsolutePath(), logLevel);
+		
+		log("Getting: " + source, logLevel);
+		log("To: " + dest.getAbsolutePath(), logLevel);
 
         //set the timestamp to the file date.
         long timestamp = 0;
@@ -445,6 +446,15 @@ public class Get extends Task {
     public void add(FileNameMapper fileNameMapper) {
         createMapper().add(fileNameMapper);
     }
+	
+	@Override
+	public void log(String msg, int msgLevel) {
+		boolean eatMsg = quiet && msgLevel > Project.MSG_ERR;
+		
+		if(!eatMsg){
+			super.log(msg,msgLevel);
+		}
+	}
 
     /**
      * Provide this for Backward Compatibility.
@@ -702,7 +712,7 @@ public class Get extends Task {
                     // instead and trace out something so the user
                     // doesn't think that the download happened when it
                     // didn't
-                    log("Not modified - so not downloaded", logLevel);
+					log("Not modified - so not downloaded", logLevel);
                     return null;
                 }
                 // test for 401 result (HTTP only)
